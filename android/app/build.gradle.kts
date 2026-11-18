@@ -28,7 +28,7 @@ plugins {
 }
 
 android {
-    namespace = "pe.techbot.izipay_diag"
+    namespace = "pe.techbot.payment_tester"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -42,7 +42,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "pe.techbot.izipay_diag"
+        applicationId = "pe.techbot.payment_tester"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

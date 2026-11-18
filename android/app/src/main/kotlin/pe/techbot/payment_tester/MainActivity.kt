@@ -1,4 +1,4 @@
-package pe.techbot.izipay_diag
+package pe.techbot.payment_tester
 
 import io.flutter.embedding.android.FlutterActivity
 

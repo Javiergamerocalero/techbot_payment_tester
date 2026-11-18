@@ -59,9 +59,9 @@ class Izipay {
   Uri _url(String ruta) => Uri.parse('http://$ip:$puerto/API_PPAD/$ruta');
 
   Map<String, String> _cabeceras({String? bearer}) => {
-        'Content-Type': 'application/json',
-        if (bearer != null) 'Authorization': 'Bearer $bearer',
-      };
+    'Content-Type': 'application/json',
+    if (bearer != null) 'Authorization': 'Bearer $bearer',
+  };
 
   void _log(String s) => alRegistrar?.call(s);
 
@@ -87,10 +87,14 @@ class Izipay {
         timeout: const Duration(seconds: 8),
       );
       s.destroy();
-      _log('✓ Ping TCP a $ip:$puerto — abierto (${reloj.elapsedMilliseconds} ms)');
+      _log(
+        '✓ Ping TCP a $ip:$puerto — abierto (${reloj.elapsedMilliseconds} ms)',
+      );
       return true;
     } catch (e) {
-      _log('✕ Ping TCP a $ip:$puerto — sin conexión (${reloj.elapsedMilliseconds} ms)');
+      _log(
+        '✕ Ping TCP a $ip:$puerto — sin conexión (${reloj.elapsedMilliseconds} ms)',
+      );
       _log('   $e');
       return false;
     }
@@ -137,9 +141,11 @@ class Izipay {
   Future<bool> test() async {
     final d = await _postConToken('test', const {}, operacion: 'Test /test');
     final ok = d['response_code'] == '00';
-    _log(ok
-        ? '✓ Test /test — el pinpad responde listo'
-        : '✕ Test /test — response_code=${d['response_code']}');
+    _log(
+      ok
+          ? '✓ Test /test — el pinpad responde listo'
+          : '✕ Test /test — response_code=${d['response_code']}',
+    );
     return ok;
   }
 
@@ -173,9 +179,11 @@ class Izipay {
     Future<bool> Function(String bin)? alRecibirBin,
   }) async {
     final base = cuerpoCompra(monto, modo);
-    _log('→ ${modo.etiqueta}: transacción ${base['ecr_transaccion']}, '
-        'monto ${base['ecr_amount']}'
-        '${base.containsKey('ecr_data_adicional') ? ', ecr_data_adicional=0' : ''}');
+    _log(
+      '→ ${modo.etiqueta}: transacción ${base['ecr_transaccion']}, '
+      'monto ${base['ecr_amount']}'
+      '${base.containsKey('ecr_data_adicional') ? ', ecr_data_adicional=0' : ''}',
+    );
 
     if (conBin && modo == ModoCobro.tarjeta) {
       _log('→ Paso 1: consulta de BIN');
@@ -198,11 +206,10 @@ class Izipay {
         // Liberar el pinpad: si se deja colgado tras pedir BIN, la
         // siguiente operación falla sin explicación aparente.
         _log('→ Cancelado tras el BIN: liberando el pinpad');
-        await _postConToken(
-          'procesarTransaccion',
-          {...base, 'ecr_data_adicional3': binLiberar},
-          operacion: 'BIN liberar',
-        ).catchError((_) => <String, dynamic>{});
+        await _postConToken('procesarTransaccion', {
+          ...base,
+          'ecr_data_adicional3': binLiberar,
+        }, operacion: 'BIN liberar').catchError((_) => <String, dynamic>{});
         throw IzipayError('Compra cancelada tras la consulta de BIN');
       }
       _log('→ Paso 2: compra');
@@ -266,7 +273,9 @@ class Izipay {
       throw IzipayError('$operacion: el pinpad no respondió ($e)');
     }
 
-    _log('   $operacion → HTTP ${r.statusCode} (${reloj.elapsedMilliseconds} ms)');
+    _log(
+      '   $operacion → HTTP ${r.statusCode} (${reloj.elapsedMilliseconds} ms)',
+    );
     if (r.statusCode != 200) {
       _log('   ${r.body}');
       throw IzipayError('$operacion: HTTP ${r.statusCode}');
